@@ -869,7 +869,7 @@ int8_t SendQuery(modbusHandler_t *modH ,  modbus_t telegram )
 	}
 
 
-	modH->u16regs = telegram.u16reg;
+	(*modH->u16regs) = telegram.u16reg;
 
 	// telegram header
 	modH->u8Buffer[ ID ]         = telegram.u8id;
@@ -1220,12 +1220,12 @@ void get_FC1(modbusHandler_t *modH)
 
         if(i%2)
         {
-        	modH->u16regs[i/2]= word(modH->u8Buffer[i+u8byte], lowByte(modH->u16regs[i/2]));
+        	(*modH->u16regs[i/2])= word(modH->u8Buffer[i+u8byte], lowByte((*modH->u16regs[i/2])));
         }
         else
         {
 
-        	modH->u16regs[i/2]= word(highByte(modH->u16regs[i/2]), modH->u8Buffer[i+u8byte]);
+        	(*modH->u16regs[i/2])= word(highByte((*modH->u16regs[i/2])), modH->u8Buffer[i+u8byte]);
         }
 
      }
@@ -1244,7 +1244,7 @@ void get_FC3(modbusHandler_t *modH)
 
     for (i=0; i< modH->u8Buffer[ 2 ] /2; i++)
     {
-    	modH->u16regs[ i ] = word(modH->u8Buffer[ u8byte ], modH->u8Buffer[ u8byte +1 ]);
+    	(*modH->u16regs[ i ]) = word(modH->u8Buffer[ u8byte ], modH->u8Buffer[ u8byte +1 ]);
         u8byte += 2;
     }
 }
@@ -1735,7 +1735,7 @@ int8_t process_FC1(modbusHandler_t *modH )
         bitWrite(
         	modH->u8Buffer[ modH->u8BufferSize ],
             u8bitsno,
-		    bitRead( modH->u16regs[ u16currentRegister ], u8currentBit ) );
+		    bitRead( (*modH->u16regs[ u16currentRegister ]), u8currentBit ) );
         u8bitsno ++;
 
         if (u8bitsno > 7)
@@ -1774,9 +1774,9 @@ int8_t process_FC3(modbusHandler_t *modH)
 
     for (i = u16StartAdd; i < u16StartAdd + u8regsno; i++)
     {
-    	modH->u8Buffer[ modH->u8BufferSize ] = highByte(modH->u16regs[i]);
+    	modH->u8Buffer[ modH->u8BufferSize ] = highByte((*modH->u16regs[i]));
     	modH->u8BufferSize++;
-    	modH->u8Buffer[ modH->u8BufferSize ] = lowByte(modH->u16regs[i]);
+    	modH->u8Buffer[ modH->u8BufferSize ] = lowByte((*modH->u16regs[i]));
     	modH->u8BufferSize++;
     }
     u8CopyBufferSize = modH->u8BufferSize +2;
@@ -1806,7 +1806,7 @@ int8_t process_FC5( modbusHandler_t *modH )
 
     // write to coil
     bitWrite(
-    	modH->u16regs[ u16currentRegister ],
+    	(*modH->u16regs[ u16currentRegister ]),
         u8currentBit,
 		modH->u8Buffer[ NB_HI ] == 0xff );
 
@@ -1834,7 +1834,7 @@ int8_t process_FC6(modbusHandler_t *modH )
     uint8_t u8CopyBufferSize;
     uint16_t u16val = word( modH->u8Buffer[ NB_HI ], modH->u8Buffer[ NB_LO ] );
 
-    modH->u16regs[ u16add ] = u16val;
+    (*modH->u16regs[ u16add ]) = u16val;
 
     // keep the same header
     modH->u8BufferSize = RESPONSE_SIZE;
@@ -1881,7 +1881,7 @@ int8_t process_FC15( modbusHandler_t *modH )
                     u8bitsno );
 
         bitWrite(
-            modH->u16regs[ u16currentRegister ],
+            (*modH->u16regs[ u16currentRegister ]),
             u8currentBit,
             bTemp );
 
@@ -1930,7 +1930,7 @@ int8_t process_FC16(modbusHandler_t *modH )
         		modH->u8Buffer[ (BYTE_CNT + 1) + i * 2 ],
 				modH->u8Buffer[ (BYTE_CNT + 2) + i * 2 ]);
 
-        modH->u16regs[ u16StartAdd + i ] = temp;
+        (*modH->u16regs[ u16StartAdd + i ]) = temp;
     }
     u8CopyBufferSize = modH->u8BufferSize +2;
     sendTxBuffer(modH);

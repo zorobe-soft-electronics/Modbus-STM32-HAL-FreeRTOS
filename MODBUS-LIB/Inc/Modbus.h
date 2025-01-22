@@ -186,7 +186,7 @@ typedef struct
 	uint8_t u8Buffer[MAX_BUFFER]; //Modbus buffer for communication
 	uint8_t u8BufferSize;
 	uint8_t u8lastRec;
-	uint16_t *u16regs;
+	uint16_t **u16regs;
 	uint16_t u16InCnt, u16OutCnt, u16errCnt; //keep statistics of Modbus traffic
 	uint16_t u16timeOut;
 	uint16_t u16regsize;
