@@ -25,7 +25,7 @@ void initModbusHandlers(){
 	modbusExternal.EN_Pin = EXT_RS485_DIR_Pin;
 	modbusExternal.u16regs = &modData;
 	modbusExternal.u16regsize= sizeof(modData)/sizeof(modData[0]);
-	modbusExternal.xTypeHW = USART_HW;
+	modbusExternal.xTypeHW = USART_HW_DMA;
 
 	ModbusInit(&modbusExternal);
 	ModbusStart(&modbusExternal);
@@ -38,7 +38,7 @@ void initModbusHandlers(){
 	modbusDisplay.EN_Pin = DISP_RS485_DIR_Pin;
 	modbusDisplay.u16regs = &modData;
 	modbusDisplay.u16regsize= sizeof(modData)/sizeof(modData[0]);
-	modbusDisplay.xTypeHW = USART_HW;
+	modbusDisplay.xTypeHW = USART_HW_DMA;
 
 	ModbusInit(&modbusDisplay);
 	ModbusStart(&modbusDisplay);
