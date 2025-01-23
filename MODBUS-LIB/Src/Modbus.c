@@ -48,7 +48,7 @@ const osMessageQueueAttr_t QueueTelegram_attributes = {
 
 const osThreadAttr_t myTaskModbusA_attributes = {
     .name = "TaskModbusSlave",
-    .priority = (osPriority_t) osPriorityNormal,
+    .priority = (osPriority_t) osPriorityRealtime7,
     .stack_size = 128 * 4
 };
 
@@ -1929,7 +1929,9 @@ int8_t process_FC16(modbusHandler_t *modH )
         temp = word(
         		modH->u8Buffer[ (BYTE_CNT + 1) + i * 2 ],
 				modH->u8Buffer[ (BYTE_CNT + 2) + i * 2 ]);
-
+        uint16_t* a = modH->u16regs[ u16StartAdd + i ];
+        *a = 10;
+        uint16_t b = *a;
         (*modH->u16regs[ u16StartAdd + i ]) = temp;
     }
     u8CopyBufferSize = modH->u8BufferSize +2;
