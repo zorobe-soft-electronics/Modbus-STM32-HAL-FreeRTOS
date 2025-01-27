@@ -10,7 +10,7 @@
 
 #define SLAVE_ID (0x01)
 
-extern uint16_t modData[311];
+extern uint16_t* const modData[311];
 
 modbusHandler_t modbusExternal;
 modbusHandler_t modbusDisplay;
